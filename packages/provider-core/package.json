@@ -35,6 +35,10 @@
       "types": "./src/server/errors.ts",
       "import": "./src/server/errors.ts"
     },
+    "./server/extraIntegrations": {
+      "types": "./src/server/extraIntegrations.ts",
+      "import": "./src/server/extraIntegrations.ts"
+    },
     "./server/failure": {
       "types": "./src/server/failure.ts",
       "import": "./src/server/failure.ts"

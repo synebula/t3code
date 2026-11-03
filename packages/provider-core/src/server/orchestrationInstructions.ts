@@ -1,5 +1,7 @@
 import type { ProviderInteractionMode } from "@t3tools/contracts";
 
+import { T3_EXTRA_INTEGRATIONS_ENABLED } from "./extraIntegrations.ts";
+
 // Codex truncates entries over 4,000 bytes; keep each section self-contained and below that limit.
 export const T3_CODE_ORCHESTRATION_SECTIONS: ReadonlyArray<string> = [
   `## T3 Code orchestration
@@ -24,10 +26,12 @@ Ordinary coding tasks need no T3 tools.
 - Never use \`preview_*\` unasked to verify or show your own edit. Use them when the current request asks for browser work, including recording edits, or names a page or tab. Do not repeat preview calls from an earlier turn. Public pages: web fetch or search unless browser work was asked; then preview tools only, no web fetch. Close a tab you opened before you reply, unless the user asked for it or uses it.`,
 ];
 
-export const T3_CODE_ORCHESTRATION_INSTRUCTIONS = `
+export const T3_CODE_ORCHESTRATION_INSTRUCTIONS = T3_EXTRA_INTEGRATIONS_ENABLED
+  ? `
 
 ${T3_CODE_ORCHESTRATION_SECTIONS.join("\n\n")}
-`;
+`
+  : "";
 
 export const T3_CODE_BROWSER_TOOL_INSTRUCTIONS = `
 
@@ -79,6 +83,7 @@ export function t3AcpPromptWithInstructions(input: {
   readonly state: T3AcpInstructionState;
   readonly previousState?: T3AcpInstructionState;
 }): string {
+  if (!T3_EXTRA_INTEGRATIONS_ENABLED) return input.prompt;
   // Native slash commands must remain at the start of the prompt.
   if (input.prompt.trimStart().startsWith("/")) return input.prompt;
   if (
@@ -121,7 +126,7 @@ export function t3OrchestrationPrompt(input: {
   readonly orchestrationDelivered: boolean;
   readonly deviceInstructionsDelivered: boolean;
 }): string {
-  if (!input.hasT3Mcp) return input.prompt;
+  if (!T3_EXTRA_INTEGRATIONS_ENABLED || !input.hasT3Mcp) return input.prompt;
   if (!input.orchestrationDelivered) {
     return prependT3OrchestrationInstructions(
       input.prompt,
@@ -137,5 +142,7 @@ export function t3OrchestrationSystemPrompt(
   hasT3Mcp: boolean,
   hasDeviceTools: boolean,
 ): string | undefined {
-  return hasT3Mcp ? orchestrationInstructions(hasDeviceTools) : undefined;
+  return T3_EXTRA_INTEGRATIONS_ENABLED && hasT3Mcp
+    ? orchestrationInstructions(hasDeviceTools)
+    : undefined;
 }

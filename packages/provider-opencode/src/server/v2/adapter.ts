@@ -3124,7 +3124,7 @@ export const make = Effect.fn("OpenCode2Adapter.make")(function* (instanceId: Pr
       ]
         .filter((part) => part !== undefined && part.length > 0)
         .join("\n\n");
-      if (instructions !== state.instructions) {
+      if (instructions.length > 0 && instructions !== state.instructions) {
         yield* client.session.instructions.entry.put({
           sessionID: Session.ID.make(sessionId),
           key: INSTRUCTIONS_KEY,

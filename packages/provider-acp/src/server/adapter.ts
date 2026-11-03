@@ -7787,16 +7787,16 @@ export const makeAcpAdapterV2 = Effect.fn("makeAcpAdapterV2")(function* (
           }
           if (!isNativeSlashCommand) {
             const sessionSetup = yield* Ref.get(activeSessionSetup);
-            prompt.push({
-              type: "text",
-              text: buildRuntimeInstructions({
-                harness: flavor.runtimeHarness ?? driver,
-                model: turnInput.modelSelection.model,
-                pullRequestLinking:
-                  sessionSetup === null ||
-                  flavor.sessionCarriesPullRequestLinking?.(sessionSetup.initializeResult) !== true,
-              }),
+            const runtimeInstructions = buildRuntimeInstructions({
+              harness: flavor.runtimeHarness ?? driver,
+              model: turnInput.modelSelection.model,
+              pullRequestLinking:
+                sessionSetup === null ||
+                flavor.sessionCarriesPullRequestLinking?.(sessionSetup.initializeResult) !== true,
             });
+            if (runtimeInstructions.length > 0) {
+              prompt.push({ type: "text", text: runtimeInstructions });
+            }
           }
           return {
             prompt,

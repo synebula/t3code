@@ -20,3 +20,7 @@ if (process.env.T3CODE_TEST_KEEP_PROVIDER_ENV !== "1") {
     }
   }
 }
+
+// Existing tests cover upstream prompt injection, so enable it for test runs.
+// Production defaults to off; the switch itself is tested separately.
+process.env.T3_CODE_EXTRA_INTEGRATIONS ??= "1";

@@ -9,6 +9,8 @@ import {
 import * as Schema from "effect/Schema";
 import * as Effect from "effect/Effect";
 
+import { T3_EXTRA_INTEGRATIONS_ENABLED } from "./extraIntegrations.ts";
+
 const encodePromptJson = Schema.encodeSync(Schema.fromJsonString(Schema.Unknown));
 
 interface SnapShotPromptAccessibilityNode {
@@ -197,7 +199,9 @@ export const providerMessageTextWithAttachmentPaths = Effect.fn(
 
   for (const attachment of input.attachments) {
     const source =
-      attachment.type === "image" ? (attachment as ChatImageAttachment).source : undefined;
+      T3_EXTRA_INTEGRATIONS_ENABLED && attachment.type === "image"
+        ? (attachment as ChatImageAttachment).source
+        : undefined;
     const accessibility =
       source?.accessibility ??
       (source?.accessibleText

@@ -39,6 +39,7 @@ import * as ProviderContinuationService from "./ProviderContinuationService.ts";
 import * as ThreadTitleRegenerationService from "./ThreadTitleRegenerationService.ts";
 import * as ProviderEventIngestor from "./ProviderEventIngestor.ts";
 import * as ThreadCommandExecutor from "./ThreadCommandExecutor.ts";
+import { T3_EXTRA_INTEGRATIONS_ENABLED } from "@t3tools/provider-core/server/extraIntegrations";
 import * as ProviderSessionManager from "./ProviderSessionManager.ts";
 import * as CommandOutputHub from "./CommandOutputHub.ts";
 import * as ProviderRuntimeRecoveryService from "./ProviderRuntimeRecoveryService.ts";
@@ -130,7 +131,9 @@ const layerCommandOutputHubProvided = CommandOutputHub.layer.pipe(
   Layer.provide(Layer.merge(layerEventSink, ProjectionStore.layer)),
 );
 
-const layerProviderSessionManagerProvided = ProviderSessionManager.layer.pipe(
+const layerProviderSessionManagerProvided = ProviderSessionManager.layerWithOptions({
+  configureMcp: T3_EXTRA_INTEGRATIONS_ENABLED,
+}).pipe(
   Layer.provide(
     Layer.mergeAll(
       layerCommandOutputHubProvided,

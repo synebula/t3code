@@ -2560,5 +2560,3 @@ export const layerWithOptions = (
       } satisfies ProviderSessionManagerV2Shape);
     }),
   );
-
-export const layer = layerWithOptions();

@@ -99,7 +99,9 @@ export function antigravitySessionMeta(
     ...(antigravityWritesRunWorkflowSkill(initializeResult.agentInfo?.version)
       ? { disabledTools: ["run_workflow"] }
       : {}),
-    ...(systemPromptAppend !== undefined && antigravityAppendsSystemPrompt(initializeResult)
+    ...(systemPromptAppend !== undefined &&
+    systemPromptAppend.length > 0 &&
+    antigravityAppendsSystemPrompt(initializeResult)
       ? { systemPrompt: { append: systemPromptAppend } }
       : {}),
   };

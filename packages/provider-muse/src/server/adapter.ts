@@ -2061,18 +2061,18 @@ export const makeMuseAdapterV2 = Effect.fn("makeMuseAdapterV2")(function* (
                 `Muse returned an unsupported compaction status: ${result.status}`,
               );
           } else {
+            const runtimeInstructions = buildRuntimeInstructions({
+              harness: "Muse Code",
+              model: session.model ?? undefined,
+              reasoningEffort: effort,
+            });
             const result = yield* request(
               "turn/start",
               {
                 input: [
-                  {
-                    type: "text",
-                    text: buildRuntimeInstructions({
-                      harness: "Muse Code",
-                      model: session.model ?? undefined,
-                      reasoningEffort: effort,
-                    }),
-                  },
+                  ...(runtimeInstructions.length === 0
+                    ? []
+                    : [{ type: "text" as const, text: runtimeInstructions }]),
                   ...parts,
                 ],
                 displayText: turnInput.message.text || "Image attachment",
